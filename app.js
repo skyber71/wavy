@@ -31,10 +31,6 @@ usp.on("connection",async (socket)=>{
     });
 
     socket.on("newChat",(data)=>{
-        // const originalIV = Buffer.from(data.iv, "base64");
-        // const decipher = crypto.createDecipheriv(algorithm,key,originalIV);
-        // let decryptedData = decipher.update(data.message,"hex","utf-8");
-        // decryptedData += decipher.final("utf-8");
         socket.broadcast.emit("loadNewChat", {receiverId:data.receiverId, senderId:data.senderId, message:data.message});
     });
 
@@ -50,7 +46,12 @@ usp.on("connection",async (socket)=>{
             decryptedData += decipher.final("utf-8");
             chats[i]["message"] = decryptedData;
         }
+        
         socket.emit("loadChat",{chats :chats});
+    })
+    socket.on("existsChat", async(data)=>{
+        var receiverUser = await User.findOne({_id: data.receiverId});
+        socket.emit("loadReceiver",{receiverUser: receiverUser});
     })
 });
 

@@ -1,16 +1,21 @@
 <%- include("header.ejs")%>
-<h2 class="mb-4">Hi, <%= user.username%></h2>
+
 
 <div class="row">
     <div class="col-md-3">
-        <ul class="list-group">
+        <h2 class="mb-4">Hi, <%= user.username%></h2>
+        <div class="list-group">
             <%
                 if(users.length > 0){
                     for(let i =0;i<users.length;i++){
                         %>
-                        <li class="list-group-item list-grou-item-dark cursor-pointer user-list" data-id="<%= users[i]["_id"]%>">
-                            <img src="<%= users[i]["image"] %>" alt="" width="50px" height="50px">
-                         <%= users[i]["username"]%>   
+                        <div class="list-group-item list-grou-item-dark cursor-pointer user-list" data-id="<%= users[i]["_id"]%>">
+                            <div class="profile-name">
+                                <img class="profile-img" src="<%= users[i]["image"] %>" alt="" width="50px" height="50px">
+                            <p><%= users[i]["username"]%>  </p>
+                                </div>
+                            
+                          
                          <%
                             if(users[i]["is_online"]==1){
                                 %>
@@ -23,18 +28,19 @@
                                 <%
                             }
                          %>
-                        </li>
+                        </div>
                         <%
                     }
                 } 
             %>
-        </ul>
+        </div>
     </div>
     <div class="col-md-9">
         <h3 class="start-head">Click to start the chat</h3>
-        <div class="chat-section">
+        <div class="chat-section" >
+            <div id="chat-section-rec"></div>
             <div id="chat-container"></div>
-            <form action="" id="chat-form" method="POST">
+            <form action="" id="chat-form" method="POST" class="chat-form-input-btn">
                 <input type="text" class="border" name="message" placeholder="add message" id="message" required>    
                 <input type="submit" value="Send Message" class="btn btn-primary">
             </form>
@@ -67,6 +73,8 @@
         });
     });
 
+    
+
     $("#chat-form").submit(function(event){
         event.preventDefault();
         var message = $("#message").val();
@@ -78,9 +86,10 @@
                 if(response.success){
                     $("#message").val(" ");
                     let chat = response.data.message;
+                    let image = response.data.image;
                     let html = 
                     ` <div class="current-user-chat">
-                        <h5> `+chat+` </h5>
+                     <p>`+chat+`</p> 
                       </div>`;
                     $("#chat-container").append(html);
                     socket.emit("newChat",response.data);
@@ -114,7 +123,7 @@
     socket.on("loadNewChat", function(data){
         if(sender_id == data.receiverId && receiver_id == data.senderId){
             let html = ` <div class="distance-user-chat">
-                        <h5> `+data.message+` </h5>
+                        <p>`+data.message+` </p>
                       </div>`;
         $("#chat-container").append(html);
         }
@@ -133,7 +142,7 @@
                 addClas = "distance-user-chat"; 
             }
             html +=  ` <div class=`+addClas+`>
-                        <h5> `+chats[x]["message"]+` </h5>
+                         <p>`+chats[x]["message"]+`</p> 
                       </div>`;
          }
          $("#chat-container").append(html);
@@ -141,6 +150,15 @@
 
 
     })
+    socket.on("loadReceiver",(data)=>{
+        $("#chat-section-rec").html("");
+        let html = "";
+        html += `
+        <div id="distance-user-name">`+data.receiverUser.username+`</div>        
+        `
+        $("#chat-section-rec").append(html);
+    })
+    
     
     function scrollChat(){
         $("#chat-container").animate({
