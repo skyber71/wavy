@@ -154,6 +154,7 @@
         $("#chat-section-rec").html("");
         let html = "";
         html += `
+        <img class="receiver-img" src="`+data.receiverUser.image+`">
         <div id="distance-user-name">`+data.receiverUser.username+`</div>        
         `
         $("#chat-section-rec").append(html);

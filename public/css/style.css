@@ -46,7 +46,7 @@ body{
   border-radius: 25px;
   color: #000000;
   padding: 10px;
-  background-color: gray;
+  background-color: rgb(203, 203, 203);
   margin: 20px 0 auto;
   width: auto;
   border-radius: 25px;
@@ -201,9 +201,16 @@ body{
   padding: 5px 10px;
 }
 #distance-user-name{
-  box-shadow: 2px 10px 11px -6px rgba(0,0,0,0.57);
--webkit-box-shadow: 2px 10px 11px -6px rgba(0,0,0,0.57);
--moz-box-shadow: 2px 10px 11px -6px rgba(0,0,0,0.57);
+  
   padding: 10px;
   font-size: 20px;
+}
+.receiver-img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+#chat-section-rec{
+  padding: 5px;
+  display: flex;
 }
