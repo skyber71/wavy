@@ -12,9 +12,9 @@ body{
   cursor: pointer;
 }
 #chat-container{
-  height: 600px;
+  height: 550px;
   overflow-y: scroll;
-  background-color: #ffffff;
+  background-color: #c4d4e2;
   width: 100%;
 }
 .border {
@@ -186,6 +186,7 @@ body{
   display: flex;
 }
 .list-group-item p{
+  
   text-align: left;
 }
 .profile-img{
