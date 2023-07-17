@@ -2,7 +2,7 @@ require("dotenv").config();
 const mongoose  = require("mongoose");
 const app = require("express")();
 const http = require("http").Server(app);
-mongoose.connect("mongodb://localhost:27017/wave");
+mongoose.connect(process.env.MONGO_URL);
 const User  = require("./models/userModel")
 const userRoute = require("./routes/userRoute")
 app.use("/",userRoute);
