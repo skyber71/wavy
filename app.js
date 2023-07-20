@@ -31,7 +31,7 @@ usp.on("connection",async (socket)=>{
     });
 
     socket.on("newChat",(data)=>{
-        socket.broadcast.emit("loadNewChat", {receiverId:data.receiverId, senderId:data.senderId, message:data.message});
+        socket.broadcast.emit("loadNewChat", {receiverId:data.receiverId, senderId:data.senderId, message:data.message, createdAt:data.createdAt});
     });
 
     socket.on("existsChat", async (data)=>{

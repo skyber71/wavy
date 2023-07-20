@@ -1,56 +1,94 @@
-<%- include("header.ejs")%>
-
-
-<div class="row">
-    <div class="col-md-3">
-        <h2 class="mb-4">Hi, <%= user.username%></h2>
-        <div class="list-group">
-            <%
-                if(users.length > 0){
-                    for(let i =0;i<users.length;i++){
-                        %>
-                        <hr>
-                        <div class="list-group-item list-grou-item-dark cursor-pointer user-list" data-id="<%= users[i]["_id"]%>">
-                            <div class="profile-name">
-                                <img class="profile-img" src="<%= users[i]["image"] %>" alt="" width="50px" height="50px">
-                            <p><%= users[i]["username"]%>  </p>
-                                </div>
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>wave</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.2/socket.io.js" integrity="sha512-VJ6+sp2E5rFQk05caiXXzQd1wBABpjEj1r5kMiLmGAAgwPItw1YpqsCCBtq8Yr1x6C49/mTpRdXtq8O2RcZhlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../public/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lumanosimo&family=Merienda&family=Poppins:wght@100&display=swap" rel="stylesheet"></head>
+  <body>
+	
+		<nav id="sidebar">
+            <div class="headin">
+            <h1><span class="material-symbols-outlined">
+                quick_phrases
+                </span><a href="index.html" class="logo">Wavy</a></h1>
+            </div>
+            <div class="lgout">
+            <div class="lgout-btn">
+                <a href="/logout" ><span class="fa fa-sign-out "></span></a>
+            </div>
+            </div>
+    	</nav>
+        <div id="content" class="p-4 p-md-5 pt-5 row">
+            <div class="col-md-3">
+                <div class="welcome-user">
+                    <h2>Hi, <%= user.username%></h2>
+                </div>
+                
+                <div class="list-group">
+                <%
+                    if(users.length > 0){
+                        for(let i =0;i<users.length;i++){
+                            %>
+                            <div class="list-group-item list-grou-item-dark cursor-pointer user-list" data-id="<%= users[i]["_id"]%>">
+                                <div class="profile-name">
+                                    <img class="profile-img" src="<%= users[i]["image"] %>" alt="" width="40px" height="40px">
+                                <p><%= users[i]["username"]%>  </p>
+                                    </div>
+                                
                             
-                          
-                         <%
-                            if(users[i]["is_online"]==1){
-                                %>
-                                <sup class="online-status" id="<%= users[i]["_id"] %>">Online</sup>
-                                <%
-                            }
-                            else{
-                                %>
-                                <sup class="offline-status" id="<%= users[i]["_id"] %>">Offline</sup>
-                                <%
-                            }
-                         %>
-                        </div>
-                        
-                        <%
-                    }
-                } 
-            %>
+                            <%
+                                if(users[i]["is_online"]==1){
+                                    %>
+                                    <sup class="online-status" id="<%= users[i]["_id"] %>">Online</sup>
+                                    <%
+                                }
+                                else{
+                                    %>
+                                    <sup class="offline-status" id="<%= users[i]["_id"] %>">Offline</sup>
+                                    <%
+                                }
+                            %>
+                            </div>
+                            
+                            <%
+                        }
+                    } 
+                %>
+                </div>
+                <div class="credits">
+                    <div class="c-part">
+                        Developed by <a href="">Kiran Yadav</a>
+                    </div>
+                    </div>
+            </div>
+            <div class="col-md-9">
+                <div class="spec">
+                    <h2 class="start-head">Select a chat to start a new conversation</h2>
+                    </div>
+                    <div id="chat-section-rec"></div>
+                
+                <div class="chat-section" >
+                    
+                    <div id="chat-container"></div>
+                    <form action="" id="chat-form" method="POST" class="chat-form-input-btn">
+                        <input type="text" class="border" name="message" placeholder="add message" id="message" required>    
+                        <input type="submit" value="Send message" class="btn btn-primary">
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-md-9">
-        <h3 class="start-head">Click to start the chat</h3>
-        <div class="chat-section" >
-            <div id="chat-section-rec"></div>
-            <div id="chat-container"></div>
-            <form action="" id="chat-form" method="POST" class="chat-form-input-btn">
-                <input type="text" class="border" name="message" placeholder="add message" id="message" required>    
-                <input type="submit" value="Send Message" class="btn btn-primary">
-            </form>
-        </div>
-        
-    </div>
+    
 
-</div>
+
 <script>
     var sender_id = "<%= user._id%>"
     var receiver_id; 
@@ -68,8 +106,9 @@
         $(".user-list").click(function(){
             var userId = $(this).attr("data-id");
             receiver_id = userId;
-            $(".start-head").hide();
+            $(".spec").hide();
             $(".chat-section").show();
+            
 
             socket.emit("existsChat",{senderId: sender_id, receiverId: receiver_id});
         });
@@ -88,10 +127,25 @@
                 if(response.success){
                     $("#message").val(" ");
                     let chat = response.data.message;
-                    let image = response.data.image;
-                    let html = 
-                    ` <div class="current-user-chat">
-                     <p>`+chat+`</p> 
+                    let timestamp = new Date(response.data.createdAt);
+                    let hrs =  timestamp.getHours();
+                    let mins = timestamp.getMinutes();
+                    let dur = "AM";
+                    if(hrs > 12){
+                        hrs-=12;
+                        dur = "PM";
+                    }
+                    if(mins < 10){
+                        mins = "0" + mins.toString();
+                    }
+                    let html = ` <div class="current-user-chat">
+                <div class="u-chat">
+                            <p>`+chat+`</p> 
+                        
+                            <div class="timet"><i>`+ hrs +`:`+ mins +``+dur+`</i> </div>
+                            
+                            </div>
+                        
                       </div>`;
                     $("#chat-container").append(html);
                     socket.emit("newChat",response.data);
@@ -123,9 +177,31 @@
     });
 
     socket.on("loadNewChat", function(data){
+        
+        
+                    
         if(sender_id == data.receiverId && receiver_id == data.senderId){
+            let timestamp = new Date(data.createdAt);
+                    let hrs =  timestamp.getHours();
+                    let mins = timestamp.getMinutes();
+                    let dur = "AM";
+                    if(hrs > 12){
+                        hrs-=12;
+                        dur = "PM";
+
+                    }
+                    if(mins < 10){
+                        mins = "0" + mins.toString();
+                    }
+
             let html = ` <div class="distance-user-chat">
-                        <p>`+data.message+` </p>
+                <div class="u-chat">
+                            <p>`+data.message+`</p> 
+                            
+                            <div class="timet"><i>`+ hrs +`:`+ mins +``+dur+`</i> </div>
+                            
+                            </div>
+                        
                       </div>`;
         $("#chat-container").append(html);
         }
@@ -137,6 +213,20 @@
          var chats = data.chats;
          let html = '';
          for(let x = 0; x< chats.length; x++){
+            let timestamp = new Date(chats[x].createdAt);
+                    let hrs =  timestamp.getHours();
+                    let mins = timestamp.getMinutes();
+                    let dur = "AM";
+                    if(hrs > 12){
+                        hrs-=12;
+                        dur = "PM";
+                    }
+                    if(mins < 10){
+                        mins = "0" + mins.toString();
+                    }
+                    
+                    
+
             let addClas = '';
             if(chats[x]["senderId"]== sender_id){
                 addClas = "current-user-chat";
@@ -144,7 +234,12 @@
                 addClas = "distance-user-chat"; 
             }
             html +=  ` <div class=`+addClas+`>
-                         <p>`+chats[x]["message"]+`</p> 
+                <div class="u-chat">
+                            <p>`+chats[x]["message"]+`</p> 
+                            <div class="timet"><i>`+ hrs +`:`+ mins +``+dur+`</i> </div>
+                       
+                            </div>
+                       
                       </div>`;
          }
          $("#chat-container").append(html);
@@ -170,4 +265,12 @@
     }
 
     </script>
-<%- include("footer.ejs")%>
+
+    
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+    </body>
+    </html>
