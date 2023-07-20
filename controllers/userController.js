@@ -57,10 +57,10 @@ const login = async (req,res)=>{
                 res.redirect("/dashboard");
             }
             else{
-                res.render("login",{message:"Invalid Credintials"});
+                res.render("login",{message:"Invalid Credentials"});
             }
         } else {
-            res.render("login",{message:"Invalid Credintials"});
+            res.render("login",{message:"Invalid Credentials"});
             
         }
     } catch (error) {
